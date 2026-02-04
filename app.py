@@ -1,2 +1,1 @@
-print(kdjfkjf)
-hi
+print(hi)
