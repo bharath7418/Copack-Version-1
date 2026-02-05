@@ -1,18 +1,28 @@
+from flask import Flask, render_template, request, redirect
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
 
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = 'pro_secret_key_99'
 
 raw_db_url = os.getenv('DATABASE_URL')
+
+if not raw_db_url:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///contacts.db'
+else:
+    if raw_db_url.startswith("postgres://"):
+        raw_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = raw_db_url
+
 app.config['SQLALCHEMY_DATABASE_URI'] = raw_db_url.replace("postgres://", "postgresql://", 1) if raw_db_url else 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'student_login'
+login_manager.login_view = 'login'
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,8 +36,12 @@ class Event(db.Model):
     description = db.Column(db.Text)
     location = db.Column(db.String(100))
 
+class Person(db.Model):
 class Message(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    email = db.Column(db.String(50))
+    phone = db.Column(db.String(20))
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     content = db.Column(db.Text)
@@ -37,37 +51,43 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 with app.app_context():
-    db.create_all()
+db.create_all()
     if not User.query.filter_by(username='arun').first():
         db.session.add(User(username='arun', password='arun123'))
         db.session.commit()
 
 @app.route('/')
 def home():
-    return render_template('start_page.html')
+    all_people = Person.query.all()
+    return render_template('index.html', people=all_people)
 
-@app.route('/student_new')
-def student() :
+
+@app.route('/add', methods=['POST'])
+def add_contact():
+    u_name = request.form.get('u_name')
+    u_email = request.form.get('u_email')
+    u_phone = request.form.get('u_phone')
+
+ 
+    if u_name and u_email:
+        new_person = Person(name=u_name, email=u_email, phone=u_phone)
+        db.session.add(new_person)
+        db.session.commit()
+    
+    return redirect('/')
+
+
+@app.route('/update/<int:id>', methods=['POST'])
+def update_contact(id):
+    person_to_update = Person.query.get(id)
+    
+    if person_to_update:
+        person_to_update.name = request.form.get('u_name')
+        person_to_update.email = request.form.get('u_email')
+        person_to_update.phone = request.form.get('u_phone')
+        
     events = Event.query.all()
-    return render_template('student_question_view.html', events=events)
-
-@app.route('/student_login',methods = ['GET' , 'POST'])
-def student_login() :
-    if request.method == 'POST':
-        user = User.query.filter_by(username=request.form.get('username')).first()
-        if user and user.password == request.form.get('password'):
-            login_user(user)
-            return redirect(url_for('student_problem_view'))
-        flash('Invalid Credentials')
-    return render_template('student_login.html')
-
-@app.route('/student_problem_view')
-@login_required
-def student_problem_view() :
-    events = Event.query.all()
-    return render_template("student_problem_view.html", events=events)
-
-
+    return render_template('index.html', events=events)
 
 @app.route('/contact', methods=['POST'])
 def send_message():
@@ -89,7 +109,7 @@ def login():
             login_user(user)
             return redirect(url_for('admin_panel'))
         flash('Invalid Credentials')
-    return render_template('admin_login.html')
+    return render_template('login.html')
 
 @app.route('/admin')
 @login_required
@@ -119,7 +139,9 @@ def update_event(id):
         event.date = request.form.get('date')
         event.location = request.form.get('location')
         event.description = request.form.get('description')
-        db.session.commit()
+db.session.commit()
+        
+    return redirect('/')
         return redirect(url_for('admin_panel'))
     return render_template('updated.html', event=event)
 
@@ -130,11 +152,15 @@ def delete_event(id):
     db.session.commit()
     return redirect(url_for('admin_panel'))
 
+@app.route('/clear', methods=['POST'])
+def clear_data():
+    db.session.query(Person).delete()
 @app.route('/admin/delete_msg/<int:id>')
 @login_required
 def delete_msg(id):
     db.session.delete(Message.query.get_or_404(id))
-    db.session.commit()
+db.session.commit()
+    return redirect('/')
     return redirect(url_for('admin_panel'))
 
 @app.route('/logout')
@@ -143,4 +169,4 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+app.run(debug=True)
