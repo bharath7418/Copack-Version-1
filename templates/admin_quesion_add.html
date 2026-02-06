@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Upload File</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar custom-navbar">
+        <div class="container-fluid">
+            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">← Back</a>
+            <h2 class="navbar-brand mx-auto fw-bold">COPACK</h2>
+        </div>
+    </nav>
+
+    <h2 class="question-header">Enter the Question Details</h2>
+
+    <!-- Main Container -->
+    <div class="container mt-4">
+        <div class="card question-card shadow-sm">
+            <div class="card-body">
+
+                <form action="/admin_question_add" method="post">
+
+                    <!-- Question ID Search -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Search Question by ID</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Enter Question ID (e.g. Q123)"
+                                name="question_id">
+                            <button class="btn btn-outline-primary" type="button">
+                                Search
+                            </button>
+                        </div>
+                        <small class="text-muted">
+                            Enter an existing Question ID to fetch and edit details
+                        </small>
+                    </div>
+
+                    <!-- Question Id -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Question ID</label>
+                        <input class="form-control" name="question_id" required></input>
+                    </div>
+
+                    <!-- Question Title -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Question Title</label>
+                        <input name="title" type="text" class="form-control" required>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Problem Description</label>
+                        <textarea class="form-control" name="description" rows="4" required></textarea>
+                    </div>
+
+                    <!-- Input Format -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Input Format</label>
+                        <textarea class="form-control" name="input_format" rows="2" required></textarea>
+                    </div>
+
+                    <!-- Constraints -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Constraints</label>
+                        <textarea class="form-control" name="constraints" rows="2" required></textarea>
+                    </div>
+
+                    <!-- Output Format -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Output Format</label>
+                        <textarea class="form-control" name="output_format" rows="2" required></textarea>
+                    </div>
+
+                    <!-- Sample Input -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Sample Input</label>
+                        <textarea class="form-control" name="sample_input" rows="2" required></textarea>
+                    </div>
+
+                    <!-- Sample Output -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Sample Output</label>
+                        <textarea class="form-control" name="sample_output" rows="2" required></textarea>
+                    </div>
+
+                    <!-- Explanation -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Explanation</label>
+                        <textarea class="form-control" name="explanation" rows="3" required></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary px-4">
+                            Submit Question
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

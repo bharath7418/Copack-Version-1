@@ -10,7 +10,10 @@
             <h3 class="m-0 text-dark">Admin Panel</h3>
             <div>
                 <a href="/student_problem_view" class="btn btn-link">View Site</a>
+                <a href="/admin/question_add" class="btn btn-danger btn-sm">Add Question</a>
                 <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+                
+                
             </div>
         </div>
     </div>
@@ -21,11 +24,18 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-primary text-white">Create Event</div>
                     <div class="card-body">
-                        <form action="/admin/add_event" method="POST">
+                        <form action="/admin/question_add" method="POST">
+                            <input type="text" name="question_id" class="form-control mb-2" placeholder="Question ID" required>
                             <input type="text" name="title" class="form-control mb-2" placeholder="Title" required>
-                            <input type="date" name="date" class="form-control mb-2" required>
-                            <input type="text" name="location" class="form-control mb-2" placeholder="Location" required>
-                            <textarea name="description" class="form-control mb-3" placeholder="Details"></textarea>
+                            <textarea name="description" class="form-control mb-3" placeholder="Description"></textarea>
+                            <input type="text" name="input_format" class="form-control mb-2" placeholder="Input_Format" required>
+                            <input type="text" name="constraints" class="form-control mb-2" placeholder="Constraints" required>
+                            <input type="text" name="output_format" class="form-control mb-2" placeholder="Output_Format" required>
+                            <input type="text" name="sample_input" class="form-control mb-2" placeholder="Sample Input" required>
+                            <input type="text" name="sample_output" class="form-control mb-2" placeholder="Sample Output" required>
+                            <input type="text" name="explanation" class="form-control mb-2" placeholder="Explanation" required>
+
+
                             <button class="btn btn-primary w-100">Publish Event</button>
                         </form>
                     </div>
@@ -37,15 +47,15 @@
                     <div class="card-header bg-dark text-white">Active Events</div>
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
-                            <thead><tr><th>Title</th><th>Date</th><th>Actions</th></tr></thead>
+                            <thead><tr><th>Question Id</th><th>Title</th><th>Actions</th></tr></thead>
                             <tbody>
-                                {% for e in events %}
+                                {% for q in questions %}
                                 <tr>
-                                    <td>{{ e.title }}</td>
-                                    <td>{{ e.date }}</td>
+                                    <td>{{ q.question_id }}</td>
+                                    <td>{{ q.title }}</td>
                                     <td>
-                                        <a href="/admin/update/{{ e.id }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="/admin/delete_event/{{ e.id }}" class="btn btn-danger btn-sm">Delete</a>
+                                        <a href="/admin/update/{{ q.id }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/admin/delete_event/{{ q.id }}" class="btn btn-danger btn-sm">Delete</a>
                                     </td>
                                 </tr>
                                 {% endfor %}

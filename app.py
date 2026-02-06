@@ -32,6 +32,19 @@ class Message(db.Model):
     email = db.Column(db.String(100))
     content = db.Column(db.Text)
 
+class Question(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question_id = db.Column(db.String(10))
+    title = db.Column(db.String(50))
+    description = db.Column(db.Text)
+    input_format = db.Column(db.String(100))
+    constraints = db.Column(db.String(100))
+    output_format = db.Column(db.String(100))
+    sample_input = db.Column(db.String(100))
+    sample_output = db.Column(db.String(100))
+    explanation = db.Column(db.Text)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -69,17 +82,31 @@ def student_problem_view() :
 
 
 
-@app.route('/contact', methods=['POST'])
-def send_message():
-    new_msg = Message(
-        name=request.form.get('name'),
-        email=request.form.get('email'),
-        content=request.form.get('content')
+@app.route('/student_profile')
+def student_profile ():
+    return render_template('student_profile.html')
+
+@app.route('/admin/question_add',methods=['GET','POST'])
+def admin_question_add() :
+    if request.method=='POST' :
+        new_q = Question(
+        question_id = request.form.get('question_id'),
+        title=request.form.get('title'),
+        description=request.form.get('description'),
+        input_format = request.form.get('input_format'),
+        constraints=request.form.get('constraints'),
+        output_format = request.form.get('output_format'),
+        sample_input = request.form.get('sample_input'),
+        sample_output = request.form.get('sample_output'),
+        explanation = request.form.get('explanation')
     )
-    db.session.add(new_msg)
-    db.session.commit()
-    flash('Message sent successfully!')
-    return redirect(url_for('home'))
+        db.session.add(new_q)
+        db.session.commit()
+        flash('Question published successfully!')
+        return redirect(url_for('admin_panel'))
+    return redirect(url_for('admin_panel'))
+    
+    
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -96,7 +123,8 @@ def login():
 def admin_panel():
     events = Event.query.all()
     messages = Message.query.all()
-    return render_template('admin.html', events=events, messages=messages)
+    questions = Question.query.all()
+    return render_template('admin.html', events=events, messages=messages, questions=questions)
 
 @app.route('/admin/add_event', methods=['POST'])
 @login_required
