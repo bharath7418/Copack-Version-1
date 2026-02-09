@@ -1,0 +1,93 @@
+/* General Layout */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 40px;
+}
+
+/* Question Card & Content Protection */
+.card {
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    margin-bottom: 30px;
+    /* Prevents highlighting the question text */
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.label-heading {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 1.2px;
+    font-weight: bold;
+    margin-top: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+pre {
+    background: #2d3436;
+    color: #ffa801;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    overflow-x: auto;
+}
+
+/* Editor Protection Styles */
+#editor {
+    width: 100%;
+    height: 400px;
+    border: 2px solid #444;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    /* Disable browser-level selection */
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+/* Force cursor to default inside editor to discourage selection */
+#editor .monaco-editor .view-lines {
+    cursor: default !important;
+}
+
+/* Hide the selection highlight visual */
+.monaco-editor .selected-text {
+    background: transparent !important;
+}
+
+#language {
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#input {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background-color: #2ecc71;
+    color: white;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #27ae60;
+}

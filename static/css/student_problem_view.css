@@ -67,3 +67,15 @@ td, th {
     text-align: left;
     border-bottom: 1px solid #eee;
 }
+
+.asign, .give {
+    display: inline;
+    
+}
+
+
+.solve_problem_btn {
+    color: rgb(255, 255, 255);
+    background-color: #219150;
+
+}
